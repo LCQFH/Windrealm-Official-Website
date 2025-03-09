@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>风绘之境 - Windrealm Minecraft服务器</title>
+    <script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #3498db;
+            --dark-bg: #1a1a1a;
+            --dark-text: #e0e0e0;
+            --light-bg: #ffffff;
+            --light-text: #333333;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+        }
+
+        .dark-theme {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 导航栏 */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--light-bg);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .dark-theme header {
+            background-color: var(--dark-bg);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 16px;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light-text);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .dark-theme .nav-links a {
+            color: var(--dark-text);
+        }
+
+        .nav-links a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .theme-toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle::before {
+            content: "";
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle.sun::before {
+            transform: translateX(0);
+        }
+
+        .theme-toggle.moon::before {
+            transform: translateX(30px);
+        }
+
+        .theme-toggle span {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            font-size: 14px;
+            top: 5px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle.sun .sun {
+            left: 5px;
+            opacity: 1;
+        }
+
+        .theme-toggle.sun .moon {
+            right: 5px;
+            opacity: 0;
+        }
+
+        .theme-toggle.moon .sun {
+            left: 5px;
+            opacity: 0;
+        }
+
+        .theme-toggle.moon .moon {
+            right: 5px;
+            opacity: 1;
+        }
+
+        /* 主要内容 */
+        main {
+            margin-top: 80px;
+            padding-bottom: 50px;
+        }
+
+        /* 英雄区域 */
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            margin-top: 0;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-color);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 服务器状态 */
+        .server-status {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-theme .server-status {
+            background-color: #2a2a2a;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .status-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+            margin-right: 8px;
+        }
+
+        .status-dot.online {
+            background-color: #2ecc71;
+        }
+
+        .status-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-label {
+            color: var(--light-text);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .dark-theme .status-label {
+            color: #a0a0a0;
+        }
+
+        .status-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .last-updated {
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-top: 20px;
+        }
+
+        .dark-theme .last-updated {
+            color: #a0a0a0;
+        }
+
+        /* 服务器特色 */
+        .features {
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+
+        .dark-theme .features {
+            background-color: #1a1a1a;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .dark-theme .feature-card {
+            background-color: #2a2a2a;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: var(--light-text);
+        }
+
+        .dark-theme .feature-description {
+            color: #a0a0a0;
+        }
+
+        /* 玩家列表 */
+        .players {
+            padding: 60px 0;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .player-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-theme .player-card {
+            background-color: #2a2a2a;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .player-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+
+        .player-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .player-info p {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .dark-theme .player-info p {
+            color: #a0a0a0;
+        }
+
+        /* 服务器信息 */
+        .server-info {
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+
+        .dark-theme .server-info {
+            background-color: #1a1a1a;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .info-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-theme .info-card {
+            background-color: #2a2a2a;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .info-content {
+            color: var(--light-text);
+        }
+
+        .dark-theme .info-content {
+            color: #a0a0a0;
+        }
+
+        .info-content ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-content li {
+            margin-bottom: 8px;
+        }
+
+        /* 加入方式 */
+        .join {
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .join-methods {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .join-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-theme .join-card {
+            background-color: #2a2a2a;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .join-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .join-description {
+            margin-bottom: 20px;
+            color: var(--light-text);
+        }
+
+        .dark-theme .join-description {
+            color: #a0a0a0;
+        }
+
+        .join-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .join-button:hover {
+            background-color: #27ae60;
+        }
+
+        /* 文档 */
+        .documentation {
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+
+        .dark-theme .documentation {
+            background-color: #1a1a1a;
+        }
+
+        .doc-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .dark-theme .doc-card {
+            background-color: #2a2a2a;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .doc-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .doc-description {
+            color: var(--light-text);
+            margin-bottom: 30px;
+        }
+
+        .dark-theme .doc-description {
+            color: #a0a0a0;
+        }
+
+        .doc-link {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .doc-link:hover {
+            background-color: #27ae60;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .footer-section p, .footer-section a {
+            color: #a0a0a0;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .status-info {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid, .players-grid, .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .join-methods {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .join-card {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
+
+        /* 转圈动画 */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo-container">
+                    <img src="https://lcqfh.github.io/Windrealm/Windrealm.svg" alt="Windrealm Logo" class="logo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCI+PHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjZjVmNWY1Ii8+PHRleHQgeD0iMjUiIHk9IjI1IiBmb250LWZhbWlseT0iQXJpYWwsIEhlbHZldGljYSIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzk5OSI+Rm9udCBBcnRpZmllcjwvdGV4dD48L3N2Zz4='">
+                    <div class="logo-text">
+                        风绘之境
+                        <span>Windrealm</span>
+                    </div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#features">特色</a></li>
+                    <li><a href="#status">服务器状态</a></li>
+                    <li><a href="#players">在线玩家</a></li>
+                    <li><a href="#info">服务器信息</a></li>
+                    <li><a href="#join">加入我们</a></li>
+                    <li><a href="#docs">文档</a></li>
+                </ul>
+                <div class="theme-toggle" id="themeToggle">
+                    <span class="sun">☀️</span>
+                    <span class="moon">🌙</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main>
+        <!-- 英雄区域 -->
+        <section class="hero" id="home">
+            <div class="container">
+                <h1>风绘之境 - Windrealm</h1>
+                <p>一个基于leaves服务端的纯生存Minecraft服务器，支持Java和基岩版互通，提供稳定流畅的游戏体验</p>
+                <a href="#join" class="cta-button">立即加入</a>
+            </div>
+        </section>
+
+        <!-- 服务器状态 -->
+        <section class="server-status" id="status">
+            <div class="container">
+                <div class="status-header">
+                    <h2 class="status-title">服务器状态</h2>
+                    <div class="status-indicator">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span id="statusText">离线</span>
+                    </div>
+                </div>
+                <div class="status-info">
+                    <div class="status-item">
+                        <span class="status-label">在线玩家</span>
+                        <span class="status-value" id="playersOnline">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">最大玩家</span>
+                        <span class="status-value" id="playersMax">100</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">服务器版本</span>
+                        <span class="status-value" id="serverVersion">1.21.4</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">运行时间</span>
+                        <span class="status-value" id="uptime">3个月</span>
+                    </div>
+                </div>
+                <div id="statusSpinner" class="spinner" style="display: none;"></div>
+                <p class="last-updated">最后更新: <span id="lastUpdated">--</span></p>
+                <p id="errorMessage" style="color: #e74c3c; text-align: center; margin-top: 20px; display: none;"></p>
+                <div id="motd" style="margin-top: 20px; text-align: center; font-weight: bold;"></div>
+            </div>
+        </section>
+
+        <!-- 服务器特色 -->
+        <section class="features" id="features">
+            <div class="container">
+                <h2 class="section-title">服务器特色</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏠</div>
+                        <h3 class="feature-title">纯生存</h3>
+                        <p class="feature-description">从零开始，体验最纯粹的Minecraft生存玩法</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">生电</h3>
+                        <p class="feature-description">利用红石和各种机械装置，创造你的生电机器</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏗️</div>
+                        <h3 class="feature-title">建筑</h3>
+                        <p class="feature-description">发挥你的创造力，建造独一无二的建筑作品</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👴</div>
+                        <h3 class="feature-title">养老</h3>
+                        <p class="feature-description">轻松友好的游戏环境，适合各年龄段玩家</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 在线玩家 -->
+        <section class="players" id="players">
+            <div class="container">
+                <h2 class="section-title">在线玩家</h2>
+                <div class="players-grid" id="playersGrid">
+                    <!-- 玩家数据将通过JavaScript动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 服务器信息 -->
+        <section class="server-info" id="info">
+            <div class="container">
+                <h2 class="section-title">服务器信息</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3 class="info-title"><i>🌐</i> 服务器地址</h3>
+                        <div class="info-content">
+                            <p>play.simpfun.cn:32888</p>
+                            <p>Java版和基岩版使用相同地址</p>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h3 class="info-title"><i>⚙️</i> 服务器配置</h3>
+                        <div class="info-content">
+                            <p>高性能硬件配置</p>
+                            <p>优化网络连接，低延迟</p>
+                            <p>支持大规模建筑和多人在线</p>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h3 class="info-title"><i>🔌</i> 插件与功能</h3>
+                        <div class="info-content">
+                            <ul>
+                                <li>AuthMe - 账号验证</li>
+                                <li>CoreProtect - 数据备份与恢复</li>
+                                <li>Gsit - 玩家坐姿</li>
+                                <li>皮肤修复</li>
+                                <li>地图画</li>
+                                <li>签到系统</li>
+                                <li>反作弊系统</li>
+                                <li>TPA - 传送请求</li>
+                                <li>ViaVersion - 版本兼容</li>
+                                <li>Leaves-Carpet - 进阶功能</li>
+                                <li>Jade - 物品信息显示</li>
+                                <li>Xaero-Map - 地图优化</li>
+                                <li>Hud - 头显示信息</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 加入方式 -->
+        <section class="join" id="join">
+            <div class="container">
+                <h2 class="section-title">如何加入</h2>
+                <div class="join-methods">
+                    <div class="join-card">
+                        <h3 class="join-title">通过游戏加入</h3>
+                        <p class="join-description">在你的Minecraft游戏中添加服务器地址: play.simpfun.cn:32888</p>
+                        <a href="minecraft://play.simpfun.cn:32888" class="join-button">立即连接</a>
+                    </div>
+                    <div class="join-card">
+                        <h3 class="join-title">加入官方QQ群</h3>
+                        <p class="join-description">服务器官方QQ群: 1012582471，与其他玩家交流互动</p>
+                        <a href="https://qm.qq.com/q/iUlUkTbDgI" class="join-button">点击加入</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 文档 -->
+        <section class="documentation" id="docs">
+            <div class="container">
+                <h2 class="section-title">服务器文档</h2>
+                <div class="doc-card">
+                    <h3 class="doc-title">服务器规则与指南</h3>
+                    <p class="feature-description">了解服务器规则、指令使用和各种游戏指南</p>
+                    <a href="https://lcqfh.github.io/Windrealm/" class="doc-link">查看文档</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>风绘之境</h3>
+                    <p>一个基于leaves服务端的纯生存Minecraft服务器，支持Java和基岩版互通。</p>
+                    <div class="social-icons">
+                        <a href="https://qm.qq.com/q/iUlUkTbDgI" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8a4 4 0 0 1-4 4v2a4 4 0 0 1-4 4v2a4 4 0 0 0 4 4v-2a4 4 0 0 0 4-4v-2a4 4 0 0 1 4-4z"></path>
+                                <line x1="20.84" y1="11.84" x2="15.84" y2="6.84"></line>
+                                <line x1="12" y1="18" x2="12" y2="12"></line>
+                            </svg>
+                        </a>
+                        <a href="https://lcqfh.github.io/Windrealm/" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+                                <polyline points="10 12 15 12 12 15"></polyline>
+                            </svg>
+                        </a>
+                        <a href="https://github.com/LCQFH/Windrealm" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 风绘之境(Windrealm) Minecraft Server.All Rights Reserved.</p>
+                <p>网站访问量: <span id="busuanzi_value_site_pv">0</span> 次</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // 检查本地存储中的主题偏好
+        if (localStorage.getItem('darkTheme') === 'true') {
+            body.classList.add('dark-theme');
+            themeToggle.classList.add('moon');
+            themeToggle.classList.remove('sun');
+        } else {
+            body.classList.remove('dark-theme');
+            themeToggle.classList.add('sun');
+            themeToggle.classList.remove('moon');
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-theme');
+            if (body.classList.contains('dark-theme')) {
+                localStorage.setItem('darkTheme', 'true');
+                themeToggle.classList.remove('sun');
+                themeToggle.classList.add('moon');
+            } else {
+                localStorage.setItem('darkTheme', 'false');
+                themeToggle.classList.remove('moon');
+                themeToggle.classList.add('sun');
+            }
+        });
+        
+        // 获取服务器状态
+        function fetchServerStatus() {
+            const statusSpinner = document.getElementById('statusSpinner');
+            const errorMessage = document.getElementById('errorMessage');
+            statusSpinner.style.display = 'block'; // 显示转圈动画
+            errorMessage.style.display = 'none'; // 隐藏错误消息
+
+            fetch('https://api.mcsrvstat.us/3/play.simpfun.cn:32888')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应不正常');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.online) {
+                        updateServerStatus(data);
+                        updatePlayerList(data.players.list || []);
+                    } else {
+                        console.error('服务器离线');
+                        errorMessage.textContent = '服务器目前处于离线状态';
+                        errorMessage.style.display = 'block';
+                        updatePlayerList(null); // 通知更新玩家列表函数服务器离线
+                    }
+                })
+                .catch(error => {
+                    console.error('获取服务器状态时出错:', error);
+                    errorMessage.textContent = '获取服务器状态时出错: ' + error.message;
+                    errorMessage.style.display = 'block';
+                    updatePlayerList(null); // 通知更新玩家列表函数服务器离线
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        statusSpinner.style.display = 'none'; // 隐藏转圈动画
+                    }, 500);
+                });
+        }
+
+        // 更新服务器状态显示
+        function updateServerStatus(data) {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const playersOnline = document.getElementById('playersOnline');
+            const playersMax = document.getElementById('playersMax');
+            const serverVersion = document.getElementById('serverVersion');
+            const uptime = document.getElementById('uptime');
+            const lastUpdated = document.getElementById('lastUpdated');
+            
+            // 更新服务器状态
+            statusDot.classList.add('online');
+            statusText.textContent = '在线';
+            
+            // 更新玩家数量
+            playersOnline.textContent = data.players.online;
+            playersMax.textContent = data.players.max; // 最大玩家数
+            
+            // 更新服务器版本
+            serverVersion.textContent = data.version;
+            
+            // 更新运行时间
+            uptime.textContent = '3个月'; // 这个API不提供运行时间，所以保持原值
+            
+            // 更新最后更新时间
+            lastUpdated.textContent = new Date().toLocaleString();
+            
+            // 更新MOTD
+            const motdElement = document.getElementById('motd');
+            if (motdElement) {
+                motdElement.textContent = data.motd.clean.join('\n');
+            }
+        }
+
+        // 更新在线玩家列表
+        function updatePlayerList(players) {
+            const playersGrid = document.getElementById('playersGrid');
+            playersGrid.innerHTML = ''; // 清空现有玩家列表
+            
+            if (players === null || players === undefined) {
+                const offlinePlayerCard = document.createElement('div');
+                offlinePlayerCard.className = 'player-card';
+                offlinePlayerCard.innerHTML = '<p class="player-info">服务器离线，无法获取在线玩家列表</p>';
+                playersGrid.appendChild(offlinePlayerCard);
+                return;
+            }
+            
+            if (players.length === 0) {
+                const emptyPlayerCard = document.createElement('div');
+                emptyPlayerCard.className = 'player-card';
+                emptyPlayerCard.innerHTML = '<p class="player-info">暂无在线玩家</p>';
+                playersGrid.appendChild(emptyPlayerCard);
+                return;
+            }
+            
+            players.forEach(player => {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                
+                const playerName = player.name || '匿名玩家';
+                let skinUrl = `https://vzge.me/face/640/${playerName}`;
+                
+                // 尝试获取头像，如果失败则使用指定的默认头像
+                fetch(skinUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('获取头像失败');
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        const imageUrl = URL.createObjectURL(blob);
+                        playerCard.innerHTML = `
+                            <img src="${imageUrl}" alt="${playerName}" class="player-avatar">
+                            <div class="player-info">
+                                <h3>${playerName}</h3>
+                                <p>最后上线: 刚刚</p>
+                            </div>
+                        `;
+                    })
+                    .catch(error => {
+                        console.error('获取头像时出错:', error);
+                        playerCard.innerHTML = `
+                            <img src="https://lcqfh.github.io/Windrealm/Windrealm.svg" alt="${playerName}" class="player-avatar">
+                            <div class="player-info">
+                                <h3>${playerName}</h3>
+                                <p>最后上线: 刚刚</p>
+                            </div>
+                        `;
+                    });
+                
+                playersGrid.appendChild(playerCard);
+            });
+        }
+        
+        // 初始加载服务器状态
+        fetchServerStatus();
+        
+        // 每5分钟刷新一次服务器状态
+        setInterval(fetchServerStatus, 300000);
+        
+        // 平滑滚动到锚点
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
