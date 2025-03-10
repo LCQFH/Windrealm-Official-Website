@@ -31,4 +31,4 @@
 
 欢迎对本网站的改进提出建议或贡献代码。可以通过以下方式联系管理员：
 - QQ群：1012582471
-- GitHub：[LCQFH/Windrealm](https://github.com/LCQFH/Windrealm)
+- GitHub：[LCQFH](https://github.com/LCQFH)
